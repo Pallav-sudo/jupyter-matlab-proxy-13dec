@@ -26,11 +26,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb
-          Xvfb :99 -ac &
-          echo "DISPLAY=:99" >> $GITHUB_ENV
-          # exec 6>display.log && Xvfb -displayfd 6 -screen 0 1600x1200x24 -dpi 100 -extension RANDR
-          # DISPLAY_PORT=$(cat display.log)
-          # echo "DISPLAY=:$DISPLAY_PORT" >> $GITHUB_ENV
+          # Xvfb :99 -ac &
+          # echo "DISPLAY=:99" >> $GITHUB_ENV
+          exec 6>display.log && Xvfb -displayfd 6 -ac -screen 0 1600x1200x24 -dpi 100 -extension RANDR &
+          DISPLAY_PORT=$(cat display.log)
+          echo "DISPLAY=:$DISPLAY_PORT" >> $GITHUB_ENV
 
       - name: Set up MATLAB ${{ matrix.matlab-release }}
         # Use MATLAB Actions to get running MATLAB in GitHub Actions
