@@ -28,7 +28,8 @@ jobs:
           sudo apt-get install -y xvfb
           # Xvfb :99 -ac &
           # echo "DISPLAY=:99" >> $GITHUB_ENV
-          exec 6>display.log && Xvfb -displayfd 6 -ac -screen 0 1600x1200x24 -dpi 100 -extension RANDR &
+          # exec 6>display.log && Xvfb -displayfd 6 -ac -screen 0 1600x1200x24 -dpi 100 -extension RANDR &
+          exec 6>display.log && Xvfb -displayfd 6 -ac &
           DISPLAY_PORT=$(cat display.log)
           echo "DISPLAY=:$DISPLAY_PORT" >> $GITHUB_ENV
 
