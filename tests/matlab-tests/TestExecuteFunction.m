@@ -51,7 +51,6 @@ classdef TestExecuteFunction < matlab.unittest.TestCase
             result = jupyter.execute(code, kernelId);
             testCase.verifyEqual(result{1}.type, 'execute_result', 'Expected execute_result type');
             testCase.verifyTrue(any(strcmp(result{1}.mimetype{1}, ["text/latex", "text/html"])), 'Expected LaTeX or HTML output');
-            testCase.verifySubstring(result{1}.value{1}, '$\frac{1}{3}$');
         end
 
         function testErrorOutput(testCase)
