@@ -26,14 +26,25 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb
-          # sudo apt-get install -y xvfb libxcb-xinerama0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xfixes0 libxcb-shape0
-          # Xvfb :99 -ac &
-          # echo "DISPLAY=:99" >> $GITHUB_ENV
-          exec 6>display.log && Xvfb -displayfd 6 -ac -screen 0 1600x1200x24 -dpi 100 -extension RANDR &
-          # exec 6>display.log && Xvfb -displayfd 6 -ac &
-          DISPLAY_PORT=$(cat display.log)
+          is_port_free() {
+            ! ss -tln | awk '{print $4}' | grep -q ":$1$"
+          }
+        
+          # Find the first free display port in the range 1000-9999
+          DISPLAY_PORT=""
+          for port in {1000..9999}; do
+            if is_port_free $port; then
+              DISPLAY_PORT=$port
+              break
+            fi
+          done
+          # Start Xvfb with the free port
+          Xvfb :$DISPLAY_PORT -ac &
+          # Set the DISPLAY environment variable
           echo "DISPLAY=:$DISPLAY_PORT" >> $GITHUB_ENV
-
+          # Print the chosen display port for debugging
+          echo "Using display port :$DISPLAY_PORT"
+        
       - name: Set up MATLAB ${{ matrix.matlab-release }}
         # Use MATLAB Actions to get running MATLAB in GitHub Actions
         uses: matlab-actions/setup-matlab@v2
