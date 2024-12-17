@@ -26,15 +26,16 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb
-          is_port_free() {
-            ! ss -tln | awk '{print $4}' | grep -q ":$1$"
+          # Function to check if a display port is free
+          is_display_free() {
+            xvfb-run --auto-servernum --server-num=$1 true 2>/dev/null
           }
-        
-          # Find the first free display port in the range 1000-9999
+
+          # Find the first free display port
           DISPLAY_PORT=""
-          for port in {1000..9999}; do
-            if is_port_free $port; then
-              DISPLAY_PORT=$port
+          for num in {0..99}; do
+            if is_display_free $num; then
+              DISPLAY_PORT=$num
               break
             fi
           done
