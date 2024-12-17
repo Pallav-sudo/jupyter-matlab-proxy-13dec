@@ -33,7 +33,7 @@ jobs:
 
           # Find the first free display port
           DISPLAY_PORT=""
-          for num in {0..99}; do
+          for num in $(seq 99 -1 0); do
             if is_display_free $num; then
               DISPLAY_PORT=$num
               break
